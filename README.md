@@ -13,6 +13,6 @@ For running the app, open app.R in RStudio and push the 'Run App' button. The Sh
 <br><br>
 If you use 'ScarFace' for your published research, please cite it as:
 <br><br>
-Raitzsch, M. (2020): ScarFace - seacarb calculations with a Shiny user interface. Available from: http://xxx xxx.
+Raitzsch, M. (2020): ScarFace - seacarb calculations with a Shiny user interface. Available from: https://github.com/martens73/ScarFace.
 <br><br>
 but also please acknowledge the original work of Lavigne et al. (2011), see above.
