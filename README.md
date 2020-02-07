@@ -6,8 +6,11 @@ Available from: http://CRAN.R-project.org/package=seacarb).
 'ScarFace' enables the usage of 'seacarb' via an user interface (ui) without the need for digging into R coding.
 <br><br>
 The web app implements the most frequently functions bjerrum(), carb(), and errors(), which can be operated by numerical or 
-slider inputs. In addition, batch processing can be performed by uploading *.csv files, where the columns can have any names
-and order. If required, propagated errors can be calculated based on source table or manually entered values.<br>
+slider inputs. In addition, batch processing can be performed by uploading csv files, where the columns can have any names
+and order. If required, propagated errors can be calculated based on source table or manually entered values.
+<br><br>
+For running the app, open app.R in RStudio and push the 'Run App' button. The Shiny app will then pop up in your default web browser. You may also use 'Batch_example_comma.csv' for testing the batch processing ability.
+<br><br>
 If you use 'ScarFace' for your published research, please cite it as:
 <br><br>
 Raitzsch, M. (2020): ScarFace - seacarb calculations with a Shiny user interface. Available from: http://xxx xxx.
