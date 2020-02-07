@@ -33,7 +33,7 @@ ui <- dashboardPage(
                     br(),
                     # div(img(src = "logo.png", width = 200), style="text-align: center;"),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.0"), align="center"),
+                    p(em("version 1.0.0"), align="center"),
                     p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'SeaCarb' package using a graphical user interface", align="center"),
                     p("Its name stands for ",tags$b("S"),"ea",tags$b("car"),"b with a Shiny-assisted user inter",tags$b("face"),".",align="center"),
                     p("'Scarface' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
