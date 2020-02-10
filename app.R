@@ -21,7 +21,7 @@ ui <- dashboardPage(
                      menuSubItem("manual input", tabName = "man", icon = icon("hand-pointer")),
                      menuSubItem("batch input", tabName = "batch", icon = icon("folder-open"))),
             menuItem("Error propagation", tabName = "error", icon = icon("arrow-circle-right")),
-            menuItem("Bibliography", tabName = "cite", icon = icon("pen-alt"))
+            menuItem("Citation", tabName = "cite", icon = icon("pen-alt"))
         )
     ),
     dashboardBody(
@@ -33,13 +33,13 @@ ui <- dashboardPage(
                     br(),
                     # div(img(src = "logo.png", width = 200), style="text-align: center;"),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.0.0"), align="center"),
+                    p(em("version 1.0"), align="center"),
                     p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'seacarb' package using a graphical user interface", align="center"),
                     p("Its name stands for ",tags$b("s"),"ea",tags$b("car"),"b calculations with a Shiny user inter",tags$b("face"),".",align="center"),
                     p("'ScarFace' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
                     p("Shiny uses reactive elements, i.e. the user interacts via the 'ui' (user interface) with the actual R code running in the background called 'server'. Whenever the user make input changes, this will automatically affect all dependent elements (e.g. plots or data tables).", align="center"),
                     p("Even though the code can be accessed and modified, there is no need for the user to dig into R programming. So 'ScarFace' is extremely user-friendly and makes the usage of 'seacarb' work like a charm.", align="center"),
-                    p("The shiny package as a whole is distributed under GPL-3 (GNU GENERAL PUBLIC LICENSE version 3). R as a package is licensed under GPL-2 and GPL-3.", align="center"),
+                    p("The Shiny package as a whole is distributed under GPL-3 (GNU GENERAL PUBLIC LICENSE version 3). R as a package is licensed under GPL-2 and GPL-3.", align="center"),
                     br(),
                     br(),
                     p("Authors: Markus Raitzsch and Jean-Pierre Gattuso", align="center"),
@@ -356,7 +356,7 @@ ui <- dashboardPage(
                             ))
                     ),
             
-            # Tab content 'Bibliography'
+            # Tab content 'Citation'
             tabItem(tabName = "cite",
                     br(),
                     br(),
@@ -364,7 +364,13 @@ ui <- dashboardPage(
                     # div(img(src = "logo.png", width = 200), style="text-align: center;"),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
                     p(em("version 1.0"), align="center"),
-                    p("Text will follow...", align="center")
+                    p("When you use ScarFace for your published research, please cite it as follows:", align="center"),
+                      br(),
+                      p("Raitzsch, M. and Gattuso, J.-P. (2020): ScarFace - seacarb calculations with a Shiny user interface. Available from: https://github.com/martens73/ScarFace.", align="center"),
+                      br(),
+                      p("but also please give due credit to the creators of the package 'seacarb':", align="center"),
+                      br(),
+                      p("Gattuso J.-P., Epitalon J.-M., Lavigne H. & Orr J., 2019. seacarb: seawater carbonate chemistry. R package version 3.2.12. http://CRAN.R-project.org/package=seacarb.", align="center")
             )
         )
     )
@@ -381,7 +387,7 @@ server <- function(input, output, session) {
                 type="l", col="red", add=TRUE)
         legend("right",lty=1:3,legend=c(expression(CO[2]),expression(HCO[3]^"-"),
                                         expression(CO[3]^"2-")))
-        legend("left",lty=1, col="black", legend="T=25, S=35, P=0\npK1=5.847, pK2=8.966")
+        legend("left",lty=1, col="black", legend="T=25, S=35, P=0\" <br>npK1=5.847, pK2=8.966")
         })
     
     # Slider and numeric inputs #
