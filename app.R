@@ -42,7 +42,7 @@ ui <- dashboardPage(
                     p("The shiny package as a whole is distributed under GPL-3 (GNU GENERAL PUBLIC LICENSE version 3). R as a package is licensed under GPL-2 and GPL-3.", align="center"),
                     br(),
                     br(),
-                    p("Author: Markus Raitzsch and Jean-Pierre Gattuso", align="center"),
+                    p("Authors: Markus Raitzsch and Jean-Pierre Gattuso", align="center"),
                     p("February 2020", align="center")
             ),
             
