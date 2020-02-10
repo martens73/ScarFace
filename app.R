@@ -34,15 +34,15 @@ ui <- dashboardPage(
                     # div(img(src = "logo.png", width = 200), style="text-align: center;"),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
                     p(em("version 1.0.0"), align="center"),
-                    p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'SeaCarb' package using a graphical user interface", align="center"),
-                    p("Its name stands for ",tags$b("S"),"ea",tags$b("car"),"b with a Shiny-assisted user inter",tags$b("face"),".",align="center"),
-                    p("'Scarface' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
+                    p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'seacarb' package using a graphical user interface", align="center"),
+                    p("Its name stands for ",tags$b("s"),"ea",tags$b("car"),"b calculations with a Shiny user inter",tags$b("face"),".",align="center"),
+                    p("'ScarFace' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
                     p("Shiny uses reactive elements, i.e. the user interacts via the 'ui' (user interface) with the actual R code running in the background called 'server'. Whenever the user make input changes, this will automatically affect all dependent elements (e.g. plots or data tables).", align="center"),
-                    p("Even though the code can be accessed and modified, there is no need for the user to dig into R programming. So 'Scarface' is extremely user-friendly and makes the usage of SeaCarb work like a charm.", align="center"),
+                    p("Even though the code can be accessed and modified, there is no need for the user to dig into R programming. So 'ScarFace' is extremely user-friendly and makes the usage of 'seacarb' work like a charm.", align="center"),
                     p("The shiny package as a whole is distributed under GPL-3 (GNU GENERAL PUBLIC LICENSE version 3). R as a package is licensed under GPL-2 and GPL-3.", align="center"),
                     br(),
                     br(),
-                    p("Author: Markus Raitzsch", align="center"),
+                    p("Authors: Markus Raitzsch and Jean-Pierre Gattuso", align="center"),
                     p("February 2020", align="center")
             ),
             
@@ -174,8 +174,6 @@ ui <- dashboardPage(
                         box(width = 12, solidHeader = TRUE, title="Table with input data", collapsible=T,
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
-                                    # shinyUI(bootstrapPage(
-                                    #     shinyFilesButton('batch','File select','Please select a file', FALSE, icon=icon("folder-open"))))
                                     fileInput("batch", "Choose CSV file to upload",
                                               multiple = FALSE,
                                               accept = c("text/csv",
