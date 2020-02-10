@@ -68,6 +68,6 @@ The method of error propagation can be specified in the lower part of the box: <
     + The **Monte Carlo** method is a brute-force approach relying on repeated random sampling of input errors, adding those to each input variables, calculating the corresponding
 output variables for each sample, and finally assessing the standard deviation in each output variables.
 * **Correlation coefficient:** correlation coefficient between standard uncertainties of var1 and var2 (only useful with 'Method of Moments', i.e., ignored for the 2 other methods, the default is r=0.0. <br>
-* **Monte Carlo repetitions:** Number of random samples, onyl applied when 'Monte Carlo' method is chosen. The default is 10000. <br><br>
+* **Monte Carlo repetitions:** Number of random samples, onyl applied when 'Monte Carlo' method is chosen. The default is 10000. <br>
 
 The calculated propagated errors are displayed in the table 'Standard uncertainties of carbonate system parameters [OUTPUT]'. To combine all data (i.e. the output data from 'batch input' plus calculated errors), this can be achieved by checking the box left of the save button. The entire table can then be saved to the destination path as a csv file.
