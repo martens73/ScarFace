@@ -7,6 +7,6 @@ Requirements for running 'ScarFace' and a manual can be found in 'MANUAL.md'.
 <br><br>
 If you use 'ScarFace' for your published research, please cite:
 <br><br>
-Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with a Shiny user interface. Available from: https://github.com/martens73/ScarFace.
+Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. https://github.com/martens73/ScarFace.
 <br> as well as <br>
 Gattuso J.-P., Epitalon J.-M., Lavigne H. and Orr J., 2019. seacarb: seawater carbonate chemistry. R package version 3.2.12. http://CRAN.R-project.org/package=seacarb.
