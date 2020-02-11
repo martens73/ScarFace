@@ -366,11 +366,11 @@ ui <- dashboardPage(
                     p(em("version 1.0"), align="center"),
                     p("When you use ScarFace for your published research, please cite it as follows:", align="center"),
                       br(),
-                      p("Raitzsch, M. and Gattuso, J.-P. (2020): ScarFace - seacarb calculations with a Shiny user interface. Available from: https://github.com/martens73/ScarFace.", align="center"),
+                      p("Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. Available from: https://github.com/martens73/ScarFace.", align="center"),
                       br(),
                       p("but also please give due credit to the creators of the package 'seacarb':", align="center"),
                       br(),
-                      p("Gattuso J.-P., Epitalon J.-M., Lavigne H. & Orr J., 2019. seacarb: seawater carbonate chemistry. R package version 3.2.12. http://CRAN.R-project.org/package=seacarb.", align="center")
+                      p("Gattuso J.-P., Epitalon J.-M., Lavigne H. and Orr J., 2019. seacarb: seawater carbonate chemistry. R package version 3.2.12. http://CRAN.R-project.org/package=seacarb.", align="center")
             )
         )
     )
