@@ -7,7 +7,6 @@ library(dplyr)
 
 ##### UI #####
 ui <- dashboardPage(
-    # dashboardHeader(title = img(src="logo.png", height = 25)),
     dashboardHeader(title = "ScarFace"),
     dashboardSidebar(
         sidebarMenu(id = "tabs",
@@ -361,7 +360,6 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     br(),
-                    # div(img(src = "logo.png", width = 200), style="text-align: center;"),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
                     p(em("version 1.0"), align="center"),
                     p("When you use ScarFace for your published research, please cite it as follows:", align="center"),
