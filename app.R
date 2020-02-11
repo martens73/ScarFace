@@ -31,7 +31,7 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.0.0"), align="center"),
+                    p(em("version 1.0.1"), align="center"),
                     p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'seacarb' package using a graphical user interface", align="center"),
                     p("Its name stands for ",tags$b("s"),"ea",tags$b("car"),"b calculations with R Shiny user inter",tags$b("face"),".",align="center"),
                     p("'ScarFace' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
@@ -363,7 +363,7 @@ ui <- dashboardPage(
                     p(em("version 1.0.0"), align="center"),
                     p("When you use 'ScarFace' for your published research, please cite the following two references:", align="center"),
                       br(),
-                      p("Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. https://doi.org/10.5281/zenodo.3662140.", align="center"),
+                      p("Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. https://doi.org/10.5281/zenodo.3662139.", align="center"),
                       p("Gattuso J.-P., Epitalon J.-M., Lavigne H. and Orr J., 2019. seacarb: seawater carbonate chemistry. R package version 3.2.12. http://CRAN.R-project.org/package=seacarb.", align="center")
             )
         )
