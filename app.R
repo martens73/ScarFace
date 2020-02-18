@@ -381,7 +381,7 @@ server <- function(input, output, session) {
                 type="l", col="red", add=TRUE)
         legend("right",lty=1:3,legend=c(expression(CO[2]),expression(HCO[3]^"-"),
                                         expression(CO[3]^"2-")))
-        legend("left",lty=1, col="black", legend="T=25, S=35, P=0\" <br>npK1=5.847, pK2=8.966")
+        legend("left",lty=1, col="black", legend="T=25, S=35, P=0\npK1=5.847, pK2=8.966")
         })
     
     # Slider and numeric inputs #
