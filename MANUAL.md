@@ -1,9 +1,4 @@
----
-title: "'ScarFace' Manual"
-author: "Markus Raitzsch and Jean-Pierre Gattuso"
-date: "February 2020"
-output: html_document
----
+# 'ScarFace' Manual
 
 ## Prerequisites
 ScarFace requires a base R installation (recommended with an installation of RStudio) and installed packages of 'shiny', 'shinydashboard', 'shinyFiles', 'seacarb', 'readr', and 'dplyr'. You may install them all at once with
@@ -31,10 +26,8 @@ In both cases, '~/app.R' must be completed with the full path to the location of
 
 ## Bjerrum plot
 The Bjerrum plot displays the relative concentrations of carbonate species, with respect to DIC, as a function of pH, when the solution is at equilibrium. The black lines represent the speciation at T=25 °C, S=35, and P=0 bar (at sea surface). By using the sliders or manual inputs, the effects of temperature, salinity and pressure on the dissociation constants *p*K1 and *p*K2 of carbonic acid can be visualized. In the rightmost box the dissociation constants are displayed as numeric values.
-
 ## Working Directory
 The working directory, i.e. the path to where the input files are stored and where output files should be saved, can be defined here by pushing 'Choose' and selecting the destination folder from the dialog window.
-
 ## Carbonate chemistry
 ### manual input
 First the input parameters must be entered in the upper left box by choosing the **pair of known carbonate system parameters**, and defining the values of those, which are in µmol/kg (except for pH and pCO2). In addition, define **temperature**, **salinity** and **pressure**. In the upper right box, additional choices can be made, including: <br>
