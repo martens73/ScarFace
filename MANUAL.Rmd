@@ -1,4 +1,9 @@
-# 'ScarFace' Manual
+---
+title: "'ScarFace' Manual"
+author: "Markus Raitzsch and Jean-Pierre Gattuso"
+date: "February 2020"
+output: html_document
+---
 
 ## Prerequisites
 ScarFace requires a base R installation (recommended with an installation of RStudio) and installed packages of 'shiny', 'shinydashboard', 'shinyFiles', 'seacarb', 'readr', and 'dplyr'. You may install them all at once with
@@ -28,7 +33,7 @@ In both cases, '~/app.R' must be completed with the full path to the location of
 The Bjerrum plot displays the relative concentrations of carbonate species, with respect to DIC, as a function of pH, when the solution is at equilibrium. The black lines represent the speciation at T=25 °C, S=35, and P=0 bar (at sea surface). By using the sliders or manual inputs, the effects of temperature, salinity and pressure on the dissociation constants *p*K1 and *p*K2 of carbonic acid can be visualized. In the rightmost box the dissociation constants are displayed as numeric values.
 
 ## Working Directory
-The working directory, i.e. the path to where the output files should be saved, must be defined here by pushing 'Choose' and selecting the destination folder from the dialog window.
+The working directory, i.e. the path to where the input files are stored and where output files should be saved, can be defined here by pushing 'Choose' and selecting the destination folder from the dialog window.
 
 ## Carbonate chemistry
 ### manual input
@@ -36,9 +41,9 @@ First the input parameters must be entered in the upper left box by choosing the
 
 * **Silicate and phosphate concentrations:** leave at 0 when unknown.
 * **Constants for K1 and K2:** when 'Auto' is chosen, the Lueker et al. (2000) constants are used, except if T is outside the range 2--35 °C and/or S is outside the range 19--43. In these cases, the constants of Waters et al. (2014) are used.
-* **Stability constant of hydrogen fluoride:** when 'Auto' is chosen, the constant of Perez and Fraga (1987) is used, except if T is outside the range 9--33 °C and/or S is outside the range 10--40. In these cases, the constant of Dickson and Riley (1979 in Dickson and Goyet, 1994) is used.
+* **INPUT pCO2:** used to indicate the convention for INPUT pCO2, i.e., when it is an input variable (flags 21 to 25): "insitu" indicates it is referenced to in situ pressure and in situ temperature; "potential" indicates it is referenced to 1 atm pressure and potential temperature; and "standard" indicates it is referenced to 1 atm pressure and in situ temperature. All three options should give identical results at surface pressure. This option is not used when pCO2 is not an input variable (flags 1 to 15). The default is "potential".
 * **Total Boron concentration:** default is Lee et al. (2010).
-* **pH scale:** default is 'total scale'.
+* **pH scale:** in addition to 'total scale', 'seawater scale' and 'free scale' from the original 'seacarb' package, 'NBS scale' can be chosen as well. Default is 'total scale'.
 
 Once the desired choices were selected, the output values in the following table can be collected in an extra table. This facilitates the comparison of computed values from different input variables. The content of 'Collected output data' can be emptied or saved to the destination path as a csv file.
 
@@ -68,6 +73,6 @@ The method of error propagation can be specified in the lower part of the box: <
     + The **Monte Carlo** method is a brute-force approach relying on repeated random sampling of input errors, adding those to each input variables, calculating the corresponding
 output variables for each sample, and finally assessing the standard deviation in each output variables.
 * **Correlation coefficient:** correlation coefficient between standard uncertainties of var1 and var2 (only useful with 'Method of Moments', i.e., ignored for the 2 other methods, the default is r=0.0. <br>
-* **Monte Carlo repetitions:** Number of random samples, only applied when 'Monte Carlo' method is chosen. The default is 10000. <br>
+* **Monte Carlo repetitions:** Number of random samples, onyl applied when 'Monte Carlo' method is chosen. The default is 10000.
 
 The calculated propagated errors are displayed in the table 'Standard uncertainties of carbonate system parameters [OUTPUT]'. To combine all data (i.e. the output data from 'batch input' plus calculated errors), this can be achieved by checking the box left of the save button. The entire table can then be saved to the destination path as a csv file.

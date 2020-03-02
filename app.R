@@ -13,9 +13,9 @@ ui <- dashboardPage(
             menuItem("About", tabName = "about", icon = icon("info")),
             menuItem("Bjerrum plot", tabName = "bjerrum", icon = icon("chart-area")),
             menuItem("Working Directory", tabname = "wd", icon = icon("cog"),
-                     menuSubItem("Directory to store data", tabName = "wd_sub"),
+                     menuSubItem("Directory to data storage", tabName = "wd_sub"),
                      shinyDirButton("dir", "Choose", "Upload", icon=icon("folder-plus")),
-                     verbatimTextOutput("dir", placeholder = TRUE)),
+                     verbatimTextOutput("path", placeholder = TRUE)),
             menuItem("Carbonate chemistry", tabName = "carb", icon = icon("flask"),
                      menuSubItem("manual input", tabName = "man", icon = icon("hand-pointer")),
                      menuSubItem("batch input", tabName = "batch", icon = icon("folder-open"))),
@@ -31,7 +31,7 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.0.1"), align="center"),
+                    p(em("version 1.1.0"), align="center"),
                     p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'seacarb' package using a graphical user interface", align="center"),
                     p("Its name stands for ",tags$b("s"),"ea",tags$b("car"),"b calculations with R Shiny user inter",tags$b("face"),".",align="center"),
                     p("'ScarFace' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
@@ -77,7 +77,10 @@ ui <- dashboardPage(
             # Tab content 'Manual'
             tabItem(tabName = "man",
                     fluidRow(
-                        box(width = 3, height = 500, solidHeader = TRUE, title="Carbonate system parameters [INPUT]", collapsible=T,
+                        box(width = 3, height = 560, solidHeader = TRUE, title="Carbonate system parameters [INPUT]", collapsible=T,
+                            div(class='row',
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
+                                textInput(inputId="ID", "Sample name [optional]", value="NA", placeholder = T))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     selectInput("pair", "Define pair of known carbonate system variables",
@@ -115,7 +118,7 @@ ui <- dashboardPage(
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     numericInput("presc", min=0, value="0", label="Pressure (bar) | P=0 at surface")))
                             ),
-                        box(width = 3, height = 500, solidHeader = TRUE, title="Additional choices [optional]", collapsible=T,
+                        box(width = 3, height = 560, solidHeader = TRUE, title="Additional choices [optional]", collapsible=T,
                             p("Leave silicate and phosphate concentrations at zero if unknown"),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
@@ -133,10 +136,10 @@ ui <- dashboardPage(
                                           "Roy et al. (1993)" = "r")))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
-                                    selectInput("kf", "Stability constant of hydrogen fluoride",
-                                                c("Auto" = "x",
-                                                  "Perez and Fraga (1987)" = "pf",
-                                                  "Dickson and Riley (1979 in Dickson and Goyet, 1994)" = "dg")))),
+                                    selectInput("gasm", "INPUT pCO2",
+                                                c("refers to 1 atm P and potential T [default]" = "potential",
+                                                  "refers to in situ P and in situ T" = "insitu",
+                                                  "refers to 1 atm P and in situ T" = "standard")))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     selectInput("b", "Total Boron concentration",
@@ -147,7 +150,8 @@ ui <- dashboardPage(
                                     selectInput("pHscale", "pH scale",
                                                 c("Total scale [default]" = "T",
                                                   "Free scale" = "F",
-                                                  "Seawater scale" = "SWS"))))
+                                                  "Seawater scale" = "SWS",
+                                                  "NBS scale" = "NBS"))))
                             )),
                     fluidRow(
                         box(width = 12, solidHeader = TRUE, title="Carbonate system parameters [OUTPUT]", collapsible=T,
@@ -172,12 +176,8 @@ ui <- dashboardPage(
                         box(width = 12, solidHeader = TRUE, title="Table with input data", collapsible=T,
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
-                                    fileInput("batch", "Choose CSV file to upload",
-                                              multiple = FALSE,
-                                              accept = c("text/csv",
-                                                         "text/comma-separated-values,text/plain",
-                                                         ".csv"))
-                                    ),
+                                    p(tags$b("Choose CSV file to upload")),
+                                    shinyFilesButton('batch', 'File select', 'Please select a file', FALSE)),
                             div(style="float: left; display:inline-block; margin-left: 15px; width: 15%",
                                 selectInput("sep", "Choose separator type",
                                         c("Comma-separated" = ",",
@@ -245,10 +245,10 @@ ui <- dashboardPage(
                                                   "Roy et al. (1993)" = "r")))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
-                                    selectInput("kfb", "Stability constant of hydrogen fluoride",
-                                                c("Auto" = "x",
-                                                  "Perez and Fraga (1987)" = "pf",
-                                                  "Dickson and Riley (1979 in Dickson and Goyet, 1994)" = "dg")))),
+                                    selectInput("gasb", "INPUT pCO2",
+                                                c("refers to 1 atm P and potential T [default]" = "potential",
+                                                  "refers to in situ P and in situ T" = "insitu",
+                                                  "refers to 1 atm P and in situ T" = "standard")))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     selectInput("bb", "Total Boron concentration",
@@ -259,9 +259,10 @@ ui <- dashboardPage(
                                     selectInput("pHscaleb", "pH scale",
                                                 c("Total scale [default]" = "T",
                                                   "Free scale" = "F",
-                                                  "Seawater scale" = "SWS"))))
+                                                  "Seawater scale" = "SWS",
+                                                  "NBS scale" = "NBS"))))
                             ),
-                        box(width = 3, height = 500, solidheader = TRUE, title = "Include additional columns [optional]", collapsible = T,
+                        box(width = 3, solidheader = TRUE, title = "Include additional columns [optional]", collapsible = T,
                             checkboxGroupInput("incol",
                                                "Select columns from source table to be included in output table"))
                         ),
@@ -360,7 +361,7 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.0.0"), align="center"),
+                    p(em("version 1.1.0"), align="center"),
                     p("When you use 'ScarFace' for your published research, please cite the following two references:", align="center"),
                       br(),
                       p("Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. https://doi.org/10.5281/zenodo.3662139.", align="center"),
@@ -415,19 +416,13 @@ server <- function(input, output, session) {
         })
     
     #### Set working directory ####
-    shinyDirChoose(
-        input,
-        'dir',
-        # roots = c(home = '~'),
-        roots = c(Home = fs::path_home(), "R Installation" = R.home(), getVolumes()()),
-        filetypes = c('', 'txt', 'bigWig', "tsv", "csv", "bw")
-    )
+    shinyDirChoose(input, 'dir', roots = c(Home = fs::path_home(), getVolumes()()), session=session)
     
     global <- reactiveValues(datapath = getwd())
-    
+
     dir <- reactive(input$dir)
-    
-    wd <- output$dir <- renderText({
+
+    wd <- output$path <- renderText({
         global$datapath
     })
     
@@ -447,42 +442,105 @@ server <- function(input, output, session) {
     # Carbonate system calculation based on parameter inputs #
     carb_man <- reactive({
         if (input$pair == "2" || input$pair == "3" || input$pair == "4" || input$pair == "5" || input$pair == "10" || input$pair == "11" || input$pair == "12" || input$pair == "13" || input$pair == "14" || input$pair == "15") {
+            if (!input$pHscale == "NBS") {
             carb(flag=as.numeric(input$pair), var1=input$first/1000000, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
-                 k1k2=input$k1k2, kf=input$kf, ks="d", pHscale=input$pHscale, b=input$b, gas="potential",
-                 warn="y", eos="eos80", long=1.e20, lat=1.e20)
+                 k1k2=input$k1k2, kf="x", ks="d", pHscale=input$pHscale, b=input$b, gas=input$gasm,
+                 warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+            } else {
+                carb(flag=as.numeric(input$pair), var1=input$first/1000000, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                     k1k2=input$k1k2, kf="x", ks="d", pHscale="SWS", b=input$b, gas=input$gasm,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+            }
+        } else if (input$pair == "22" || input$pair == "23" || input$pair == "24" || input$pair == "25") {
+            if (!input$pHscale == "NBS") {
+                carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                     k1k2=input$k1k2, kf="x", ks="d", pHscale=input$pHscale, b=input$b, gas=input$gasm,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+            } else {
+                carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                     k1k2=input$k1k2, kf="x", ks="d", pHscale="SWS", b=input$b, gas=input$gasm,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+            }
         } else if (input$pair == "21") {
-            carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
-                 k1k2=input$k1k2, kf=input$kf, ks="d", input$pHscale, b=input$b, gas="potential",
-                 warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            if (!input$pHscale == "NBS") {
+                carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                     k1k2=input$k1k2, kf="x", ks="d", pHscale=input$pHscale, b=input$b, gas=input$gasm,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+                } else {
+                    carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second+log10(1.2948 - 2.036e-3*(input$tempc+273.15) + (4.607e-4 - 1.475e-6*(input$tempc+273.15))*input$salc^2), S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                         k1k2=input$k1k2, kf="x", ks="d", pHscale="SWS", b=input$b, gas=input$gasm,
+                         warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                        mutate(Sample = input$ID) %>%
+                        select(Sample, everything())
+                }
         } else {
-            carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
-                 k1k2=input$k1k2, kf=input$kf, ks="d", input$pHscale, b=input$b, gas="potential",
-                 warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            if (input$pHscale == "NBS") {
+            carb(flag=as.numeric(input$pair), var1=input$first+log10(1.2948 - 2.036e-3*(input$tempc+273.15) + (4.607e-4 - 1.475e-6*(input$tempc+273.15))*input$salc^2), var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                 k1k2=input$k1k2, kf="x", ks="d", pHscale="SWS", b=input$b, gas=input$gasm,
+                 warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                    mutate(Sample = input$ID) %>%
+                    select(Sample, everything())
+                } else {
+                    carb(flag=as.numeric(input$pair), var1=input$first, var2=input$second/1000000, S=input$salc, T=input$tempc, Patm=1, P=input$presc, Pt=input$pho/1000000, Sit=input$sil/1000000,
+                         k1k2=input$k1k2, kf="x", ks="d", pHscale=input$pHscale, b=input$b, gas=input$gasm,
+                         warn="y", eos="eos80", long=1.e20, lat=1.e20) %>%
+                        mutate(Sample = input$ID) %>%
+                        select(Sample, everything())
+                }
             }
         })
     
     # Render the output table #
     output$hot <- renderTable({
+        if (input$pHscale == "NBS") {
         carb_man() %>%
             mutate(HCO3 = HCO3*1000000) %>%
             mutate(CO3 = CO3*1000000) %>%
             mutate(CO2 = CO2*1000000) %>%
             mutate(DIC = DIC*1000000) %>%
-            mutate(ALK = ALK*1000000)
+            mutate(ALK = ALK*1000000) %>%
+            mutate(pH = pH-log10(1.2948 - 2.036e-3*(input$tempc+273.15) + (4.607e-4 - 1.475e-6*(input$tempc+273.15))*input$salc^2))
+        } else {
+            carb_man() %>%
+                mutate(HCO3 = HCO3*1000000) %>%
+                mutate(CO3 = CO3*1000000) %>%
+                mutate(CO2 = CO2*1000000) %>%
+                mutate(DIC = DIC*1000000) %>%
+                mutate(ALK = ALK*1000000)
+        }
         }, align='c', digits=2)
     
     # Collect current data and render in extra table #    
         values <- reactiveValues(df = data.frame())
 
-        newEntry <- observe({
-            if(input$collect > 0) {
+        newEntry <- observeEvent(input$collect,{
+                if (input$pHscale == "NBS") {
                 values$df <- isolate(rbind(values$df, carb_man())) %>%
                     mutate(flag = ifelse(row_number()==nrow(.), isolate(input$pair), flag)) %>%
                     mutate(CO2 = ifelse(row_number()==nrow(.), CO2*1000000, CO2)) %>%
                     mutate(HCO3 = ifelse(row_number()==nrow(.), HCO3*1000000, HCO3)) %>%
                     mutate(CO3 = ifelse(row_number()==nrow(.), CO3*1000000, CO3)) %>%
                     mutate(DIC = ifelse(row_number()==nrow(.), DIC*1000000, DIC)) %>%
-                    mutate(ALK = ifelse(row_number()==nrow(.), ALK*1000000, ALK))
+                    mutate(ALK = ifelse(row_number()==nrow(.), ALK*1000000, ALK)) %>%
+                    mutate(pH = ifelse(row_number()==nrow(.), pH-log10(1.2948 - 2.036e-3*(input$tempc+273.15) + (4.607e-4 - 1.475e-6*(input$tempc+273.15))*input$salc^2), pH))
+                } else {
+                    values$df <- isolate(rbind(values$df, carb_man())) %>%
+                        mutate(flag = ifelse(row_number()==nrow(.), isolate(input$pair), flag)) %>%
+                        mutate(CO2 = ifelse(row_number()==nrow(.), CO2*1000000, CO2)) %>%
+                        mutate(HCO3 = ifelse(row_number()==nrow(.), HCO3*1000000, HCO3)) %>%
+                        mutate(CO3 = ifelse(row_number()==nrow(.), CO3*1000000, CO3)) %>%
+                        mutate(DIC = ifelse(row_number()==nrow(.), DIC*1000000, DIC)) %>%
+                        mutate(ALK = ifelse(row_number()==nrow(.), ALK*1000000, ALK))
                 }
             })
 
@@ -496,20 +554,26 @@ server <- function(input, output, session) {
     
     # Save data as csv #
     observe({
-        volumes <- c('Working Directory'=wd())
-        shinyFileSave(input,'coll', roots=volumes)
+        volumes <- c('Working Directory' = wd(), Home = fs::path_home(), getVolumes()())
+        shinyFileSave(input,'coll', roots=volumes, session = session)
         fileinfo <- parseSavePath(volumes, input$coll)
         if (nrow(fileinfo) > 0) {
-            write_csv(values$df, fileinfo$datapath, append = FALSE)
+            write_csv(isolate(values$df), fileinfo$datapath, append = FALSE)
             }
         })
     
     #### Carbonate system parameters (batch) ####
     # Upload data as csv #
-    tbl1 <- reactive({
-        inFile <- input$batch
-        req(inFile)
+    observe ({
+        volumes <- c('Working Directory' = wd(), Home = fs::path_home(), getVolumes()())
+        shinyFileChoose(input, 'batch', roots=volumes, filetypes=c('', 'csv'), session=session)
+    })
+    
+     tbl1 <- reactive({
+        inFile <- parseFilePaths(roots=c('Working Directory' = wd(), Home = fs::path_home(), getVolumes()()), input$batch)
+        if(NROW(inFile)) {
         tbl1 <- read_delim(inFile$datapath, delim = input$sep, col_names = TRUE, col_types = NULL, na = c("", "NA"), quoted_na = TRUE, quote = "\"", comment = "", trim_ws = TRUE, progress = show_progress(), skip_empty_rows = TRUE)
+        }
         })
 
     # Render uploaded table #
@@ -541,17 +605,45 @@ server <- function(input, output, session) {
     # Carbonate system calculation based on parameter inputs #
     carb_batch <- reactive({
         if (input$pairb == "2" || input$pairb == "3" || input$pairb == "4" || input$pairb == "5" || input$pairb == "10" || input$pairb == "11" || input$pairb == "12" || input$pairb == "13" || input$pairb == "14" || input$pairb == "15") {
+            if (!input$pHscaleb == "NBS") {
             carb(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]]/1000000, var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
-                 k1k2=input$k1k2b, kf=input$kfb, ks="d", pHscale=input$pHscaleb, b=input$bb, gas="potential",
+                 k1k2=input$k1k2b, kf="x", ks="d", pHscale=input$pHscaleb, b=input$bb, gas=input$gasb,
                  warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            } else {
+                carb(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]]/1000000, var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                     k1k2=input$k1k2b, kf="x", ks="d", pHscale="SWS", b=input$bb, gas=input$gasb,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            }
+        } else if (input$pairb == "22" || input$pairb == "23" || input$pairb == "24" || input$pairb == "25") {
+            if (!input$pHscaleb == "NBS") {
+                carb(flag=as.numeric(input$pairb), tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                     k1k2=input$k1k2b, kf="x", ks="d", pHscale=input$pHscaleb, b=input$bb, gas=input$gasb,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            } else {
+                carb(flag=as.numeric(input$pairb), tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                     k1k2=input$k1k2b, kf="x", ks="d", pHscale="SWS", b=input$bb, gas=input$gasb,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            }
         } else if (input$pairb == "21") {
+            if (!input$pHscaleb == "NBS") {
             carb(flag=as.numeric(input$pairb), tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]], S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
-                 k1k2=input$k1k2b, kf=input$kfb, ks="d", input$pHscaleb, b=input$bb, gas="potential",
+                 k1k2=input$k1k2b, kf="x", ks="d", pHscale=input$pHscaleb, b=input$bb, gas=input$gasb,
                  warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            } else {
+                carb(flag=as.numeric(input$pairb), tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]+log10(1.2948 - 2.036e-3*(tbl1()[[input$tempb]]+273.15) + (4.607e-4 - 1.475e-6*(tbl1()[[input$tempb]]+273.15))*tbl1()[[input$salb]]^2), S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                     k1k2=input$k1k2b, kf="x", ks="d", pHscale="SWS", b=input$bb, gas=input$gasb,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            }
         } else {
-            carb(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
-                 k1k2=input$k1k2b, kf=input$kfb, ks="d", input$pHscaleb, b=input$bb, gas="potential",
+            if (input$pHscaleb == "NBS") {
+            carb(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]]+log10(1.2948 - 2.036e-3*(tbl1()[[input$tempb]]+273.15) + (4.607e-4 - 1.475e-6*(tbl1()[[input$tempb]]+273.15))*tbl1()[[input$salb]]^2), var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                 k1k2=input$k1k2b, kf="x", ks="d", pHscale="SWS", b=input$bb, gas=input$gasb,
                  warn="y", eos="eos80", long=1.e20, lat=1.e20)
+            } else {
+                carb(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
+                     k1k2=input$k1k2b, kf="x", ks="d", pHscale=input$pHscaleb, b=input$bb, gas=input$gasb,
+                     warn="y", eos="eos80", long=1.e20, lat=1.e20)
+                }
             }
         })
     
@@ -565,14 +657,26 @@ server <- function(input, output, session) {
         })
     
     tbl_final <- reactive({
+        if (input$pHscaleb == "NBS") {
         carb_batch() %>%
             mutate(HCO3 = HCO3*1000000) %>%
             mutate(CO3 = CO3*1000000) %>%
             mutate(CO2 = CO2*1000000) %>%
             mutate(DIC = DIC*1000000) %>%
             mutate(ALK = ALK*1000000) %>%
+            mutate(pH = pH-+log10(1.2948 - 2.036e-3*(tbl1()[[input$tempb]]+273.15) + (4.607e-4 - 1.475e-6*(tbl1()[[input$tempb]]+273.15))*tbl1()[[input$salb]]^2)) %>%
             bind_cols(dat()) %>%
             select(input$incol, everything())
+        } else {
+            carb_batch() %>%
+                mutate(HCO3 = HCO3*1000000) %>%
+                mutate(CO3 = CO3*1000000) %>%
+                mutate(CO2 = CO2*1000000) %>%
+                mutate(DIC = DIC*1000000) %>%
+                mutate(ALK = ALK*1000000) %>%
+                bind_cols(dat()) %>%
+                select(input$incol, everything())
+        }
         })
     
     
@@ -582,7 +686,7 @@ server <- function(input, output, session) {
     
     # Save data as csv #
     observe({
-        volumes <- c('Working Directory'=wd())
+        volumes <- c('Working Directory' = wd(), Home = fs::path_home(), getVolumes()())
         shinyFileSave(input,'batch_end', roots=volumes)
         fileinfo <- parseSavePath(volumes, input$batch_end)
         if (nrow(fileinfo) > 0) {
@@ -656,21 +760,21 @@ server <- function(input, output, session) {
                    evar1=evar1()/1000000, evar2=evar2()/1000000, eS=eS(), eT=eT(), ePt=input$Pte/1000000, eSit=input$Site/1000000,
                    epK=epK(),
                    eBt=input$Bte, method = input$meth, r=input$corr, runs=input$reps,
-                   k1k2='x', kf='x', ks="d", pHscale="T", b="u74", gas="potential",
+                   k1k2='x', kf='x', ks="d", pHscale="T", b="l10", gas="potential",
                    warn="y", eos = "eos80", long = 1e+20, lat = 1e+20)
         } else if (input$pairb == "21") {
             errors(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]], S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
                    evar1=evar1(), evar2=evar2(), eS=eS(), eT=eT(), ePt=input$Pte/1000000, eSit=input$Site/1000000,
                    epK=epK(),
                    eBt=input$Bte, method = input$meth, r=input$corr, runs=input$reps,
-                   k1k2='x', kf='x', ks="d", pHscale="T", b="u74", gas="potential",
+                   k1k2='x', kf='x', ks="d", pHscale="T", b="l10", gas="potential",
                    warn="y", eos = "eos80", long = 1e+20, lat = 1e+20)
         } else {
             errors(flag=as.numeric(input$pairb), var1=tbl1()[[input$firstb]], var2=tbl1()[[input$secondb]]/1000000, S=tbl1()[[input$salb]], T=tbl1()[[input$tempb]], Patm=1, P=tbl1()[[input$presb]]/as.numeric(input$PorD), Pt=input$phob/1000000, Sit=input$silb/1000000,
                    evar1=evar1(), evar2=evar2()/1000000, eS=eS(), eT=eT(), ePt=input$Pte/1000000, eSit=input$Site/1000000,
                    epK=epK(),
                    eBt=input$Bte, method = input$meth, r=input$corr, runs=input$reps,
-                   k1k2='x', kf='x', ks="d", pHscale="T", b="u74", gas="potential",
+                   k1k2='x', kf='x', ks="d", pHscale="T", b="l10", gas="potential",
                    warn="y", eos = "eos80", long = 1e+20, lat = 1e+20)
             }
         })
@@ -701,7 +805,7 @@ server <- function(input, output, session) {
     
     # Save data as csv #
     observe({
-        volumes <- c('Working Directory'=wd())
+        volumes <- c('Working Directory' = wd(), Home = fs::path_home(), getVolumes()())
         shinyFileSave(input,'batch_err', roots=volumes)
         fileinfo <- parseSavePath(volumes, input$batch_err)
         if (nrow(fileinfo) > 0) {
