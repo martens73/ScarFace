@@ -1,9 +1,11 @@
 library(shiny)
 library(shinydashboard)
 library(shinyFiles)
+library(shinyWidgets)
 library(seacarb)
 library(readr)
 library(dplyr)
+library(DT)
 
 ##### UI #####
 ui <- dashboardPage(
@@ -24,6 +26,7 @@ ui <- dashboardPage(
         )
     ),
     dashboardBody(
+        setShadow(class = "box"),
         tabItems(
             # Tab content 'About'
             tabItem(tabName = "about",
@@ -31,7 +34,7 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.1.0"), align="center"),
+                    p(em("version 1.2.0"), align="center"),
                     p("This application is designed to calculate the carbonate system chemistry of seawater based on the 'seacarb' package using a graphical user interface", align="center"),
                     p("Its name stands for ",tags$b("s"),"ea",tags$b("car"),"b calculations with R Shiny user inter",tags$b("face"),".",align="center"),
                     p("'ScarFace' was written in 'R' and embedded in an interactive web app using the 'Shiny' package. Shiny combines the computational power of R with the interactivity of the modern web.", align="center"),
@@ -47,37 +50,41 @@ ui <- dashboardPage(
             # Tab content 'Bjerrum'
             tabItem(tabName = "bjerrum",
                     fluidRow(
-                        box(width = 3, height = 650, solidHeader = TRUE, title="Define parameters using the slider or directly", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Set physical parameters", collapsible=T,
                             uiOutput("T"),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
-                                    numericInput("T", value=25, label=""))),
+                                    numericInput("T", value=25, min=-10, label=""))),
                             br(),
                             uiOutput("S"),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
-                                    numericInput("S", value=35, label=""))),
+                                    numericInput("S", value=35, min=0, label=""))),
                             br(),
                             uiOutput("P"),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
-                                    numericInput("P", value=0, label="")))
-                        ),
-                        box(width = 6, height = 650, solidHeader = TRUE, title="Bjerrum plot", collapsible=T,
+                                    numericInput("P", value=0, min=0, label=""))),
+                            hr(),
+                            div(class='row',
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
+                                    p(tags$b("Dissociation constants [OUTPUT]")),
+                                    textOutput(outputId = "pK1"),
+                                    br(),
+                                    textOutput(outputId = "pK2"),
+                                    br(),
+                                    textOutput(outputId = "info")
+                                    ))
+                            ),
+                        box(width = 9, status = "primary", solidHeader = F, title="Bjerrum plot", collapsible=T,
                             plotOutput(outputId = "plot1", width = "100%", height = "600px")
-                        ),
-                        box(width = 3, height = 650, solidHeader = TRUE, title="Dissociation constants", collapsible=T,
-                            textOutput(outputId = "pK1"),
-                            br(),
-                            textOutput(outputId = "pK2"),
-                            br(),
-                            textOutput(outputId = "info")
-                        ))),
+                        )
+                        )),
             
             # Tab content 'Manual'
             tabItem(tabName = "man",
                     fluidRow(
-                        box(width = 3, height = 560, solidHeader = TRUE, title="Carbonate system parameters [INPUT]", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Carbonate system parameters [INPUT]", collapsible=T,
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                 textInput(inputId="ID", "Sample name [optional]", value="NA", placeholder = T))),
@@ -105,25 +112,25 @@ ui <- dashboardPage(
                                                   "pCO2 and ALK" = "24",
                                                   "pCO2 and DIC" = "25")))),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
-                                    numericInput("first", value="", label="First variable")),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
-                                    numericInput("second", value="", label="Second variable"))),
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
+                                    numericInput("first", value="", min=0, label="First variable")),
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
+                                    numericInput("second", value="", min=0, label="Second variable"))),
                             hr(),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
-                                    numericInput("tempc", value="25", step=0.1, label="Temperature (°C)")),
+                                    numericInput("tempc", value="25", min=-10, step=0.1, label="Temperature (°C)")),
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     numericInput("salc", min=0, step=0.1, value="35", label="Salinity (psu scale)")),
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     numericInput("presc", min=0, value="0", label="Pressure (bar) | P=0 at surface")))
                             ),
-                        box(width = 3, height = 560, solidHeader = TRUE, title="Additional choices [optional]", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Additional choices [optional]", collapsible=T,
                             p("Leave silicate and phosphate concentrations at zero if unknown"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("sil", min=0, value="0", label="Silicate (µmol/kg)")),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("pho", min=0, value="0", label="Phosphate (µmol/kg)"))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
@@ -152,32 +159,54 @@ ui <- dashboardPage(
                                                   "Free scale" = "F",
                                                   "Seawater scale" = "SWS",
                                                   "NBS scale" = "NBS"))))
-                            )),
+                            ),
+                            box(width = 3, status = "primary", solidHeader = F, title=tags$div(HTML('<i class="fa fa-info" style = "color:#0072B2;"></i> &nbsp; Flags')), collapsible=T, collapsed = T,
+                                p("1 = pH and CO2", br(),
+                                  "2 = CO2 and HCO3", br(),
+                                  "3 = CO2 and CO3", br(),
+                                  "4 = CO2 and ALK", br(),
+                                  "5 = CO2 and DIC", br(),
+                                  "6 = pH and HCO3", br(),
+                                  "7 = pH and CO3", br(),
+                                  "8 = pH and ALK", br(),
+                                  "9 = pH and DIC", br(),
+                                  "10 = HCO3 and CO3", br(),
+                                  "11 = HCO3 and ALK", br(),
+                                  "12 = HCO3 and DIC", br(),
+                                  "13 = CO3 and ALK", br(),
+                                  "14 = CO3 and DIC", br(),
+                                  "15 = ALK and DIC", br(),
+                                  "21 = pCO2 and pH", br(),
+                                  "22 = pCO2 and HCO3", br(),
+                                  "23 = pCO2 and CO3", br(),
+                                  "24 = pCO2 and ALK", br(),
+                                  "25 = pCO2 and DIC"))
+                            ),
                     fluidRow(
-                        box(width = 12, solidHeader = TRUE, title="Carbonate system parameters [OUTPUT]", collapsible=T,
+                        box(width = 12, status = "primary", solidHeader = F, title="Carbonate system parameters [OUTPUT]", collapsible=T,
                             div(style = 'overflow-x: auto', tableOutput("hot")),
                             hr(),
-                            actionButton('collect', label = 'Collect current data')
+                            actionButton('collect', label = tags$div(HTML('<i class="fa fa-plus-circle" style = "color:black;"></i> &nbsp; Collect current data')))
                             )),
                     fluidRow(
-                        box(width = 12, solidHeader = TRUE, title="Collected output data", collapsible=T,
-                            div(style = 'overflow-x: auto', tableOutput('CollectedData')),
+                        box(width = 12, status = "primary", solidHeader = F, title="Collected output data", collapsible=T,
+                            div(style = 'overflow-x: auto', DTOutput('CollectedData')),
                             hr(),
                             shinyUI(bootstrapPage(
                                 shinySaveButton('coll','Save collected data as csv table','Save as "filename"_coll', filetype=list(csv='csv'), icon=icon("save"))
                             )),
-                            actionButton('delete', label = 'Delete collected data',
+                            actionButton('delete', label = tags$div(HTML('<i class="fa fa-trash" style = "color:black;"></i> &nbsp; Delete selected rows')),
                                          style="color: #000; background-color: #F0BD18; border-color: #E0E0E0"))
                         )),
             
             # Tab content 'Batch'
             tabItem(tabName = "batch",
                     fluidRow(
-                        box(width = 12, solidHeader = TRUE, title="Table with input data", collapsible=T,
+                        box(width = 12, status = "primary", solidHeader = F, title="Table with input data", collapsible=T,
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 25%",
                                     p(tags$b("Choose CSV file to upload")),
-                                    shinyFilesButton('batch', 'File select', 'Please select a file', FALSE)),
+                                    shinyFilesButton('batch', 'File select', icon=icon("file-upload"), 'Please select a file', FALSE)),
                             div(style="float: left; display:inline-block; margin-left: 15px; width: 15%",
                                 selectInput("sep", "Choose separator type",
                                         c("Comma-separated" = ",",
@@ -186,7 +215,7 @@ ui <- dashboardPage(
                             div(style = 'overflow-x: auto', tableOutput(outputId = 'table1'))
                         )),
                     fluidRow(
-                        box(width = 3, height = 500, solidheader = TRUE, title = "Carbonate system parameters [INPUT]", collapsible = T,
+                        box(width = 3, status = "primary", solidHeader = F, title = "Carbonate system parameters [INPUT]", collapsible = T,
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     selectInput("pairb", "Define pair of known carbonate system variables",
@@ -211,9 +240,9 @@ ui <- dashboardPage(
                                                   "pCO2 and ALK" = "24",
                                                   "pCO2 and DIC" = "25")))),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("firstb", "Select Variable 1", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("secondb", "Select Variable 2", choices = NULL))),
                             hr(),
                             div(class='row',
@@ -222,17 +251,17 @@ ui <- dashboardPage(
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
                                     selectInput("salb", "Select Salinity", choices = NULL))),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("presb", "Select Pressure or Depth", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     radioButtons("PorD", "What is given?", choices = c("Pressure" = 1, "Depth" = 9.9548), inline = TRUE)))
                             ),
-                        box(width = 3, height = 500, solidHeader = TRUE, title="Additional choices [optional]", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Additional choices [optional]", collapsible=T,
                             p("Leave silicate and phosphate concentrations at zero if unknown"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("silb", min=0, value="0", label="Silicate (µmol/kg)")),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("phob", min=0, value="0", label="Phosphate (µmol/kg)"))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
@@ -262,12 +291,35 @@ ui <- dashboardPage(
                                                   "Seawater scale" = "SWS",
                                                   "NBS scale" = "NBS"))))
                             ),
-                        box(width = 3, solidheader = TRUE, title = "Include additional columns [optional]", collapsible = T,
-                            checkboxGroupInput("incol",
-                                               "Select columns from source table to be included in output table"))
+                        box(width = 3, status = "primary", solidHeader = F, title = "Include additional columns [optional]", collapsible = T,
+                            pickerInput("incol", "Select columns from source table to be included in output table",
+                                        choices = "", multiple = T, options = list('actions-box' = T))),
+                            # checkboxGroupInput("incol",
+                            #                    "Select columns from source table to be included in output table")),
+                        box(width = 3, status = "primary", solidHeader = F, title=tags$div(HTML('<i class="fa fa-info" style = "color:#0072B2;"></i> &nbsp; Flags')), collapsible=T, collapsed = T,
+                            p("1 = pH and CO2", br(),
+                              "2 = CO2 and HCO3", br(),
+                              "3 = CO2 and CO3", br(),
+                              "4 = CO2 and ALK", br(),
+                              "5 = CO2 and DIC", br(),
+                              "6 = pH and HCO3", br(),
+                              "7 = pH and CO3", br(),
+                              "8 = pH and ALK", br(),
+                              "9 = pH and DIC", br(),
+                              "10 = HCO3 and CO3", br(),
+                              "11 = HCO3 and ALK", br(),
+                              "12 = HCO3 and DIC", br(),
+                              "13 = CO3 and ALK", br(),
+                              "14 = CO3 and DIC", br(),
+                              "15 = ALK and DIC", br(),
+                              "21 = pCO2 and pH", br(),
+                              "22 = pCO2 and HCO3", br(),
+                              "23 = pCO2 and CO3", br(),
+                              "24 = pCO2 and ALK", br(),
+                              "25 = pCO2 and DIC"))
                         ),
                     fluidRow(
-                        box(width = 12, solidHeader = TRUE, title="Carbonate system parameters [OUTPUT]", collapsible=T,
+                        box(width = 12, status = "primary", solidHeader = F, title="Carbonate system parameters [OUTPUT]", collapsible=T,
                             div(style = 'overflow-x: auto', tableOutput('table2')),
                             hr(),
                             shinyUI(bootstrapPage(
@@ -281,41 +333,41 @@ ui <- dashboardPage(
             # Tab content 'Error propagation'
             tabItem(tabName = "error",
                     fluidRow(
-                        box(width = 3, height = 650, solidHeader = TRUE, title="Define uncertainties of input parameters", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Define uncertainties of input parameters", collapsible=T,
                             p("either from the data source or by entering manually", align="left"),
                             p("NOTE: 'Manual' will override 'Data Source'", align="left"),
                             hr(),
                             p(tags$b("Variable 1 uncertainty:"), align="left"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("firste", "Data source", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("firstem", min=0, value="", label="Manual"))),
                             p(tags$b("Variable 2 uncertainty:"), align="left"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("seconde", "Data source", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("secondm", min=0, value="", label="Manual"))),
                             p(tags$b("Temperature uncertainty:"), align="left"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("tempe", "Data source", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("tempm", min=0, step=0.1, value="", label="Manual"))),
                             p(tags$b("Salinity uncertainty:"), align="left"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     selectInput("sale", "Data source", choices = NULL)),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("salm", min=0, step=0.1, value="", label="Manual"))),
                         ),
-                        box(width = 3, height = 650, solidHeader = TRUE, title="Define additional uncertainties [optional]", collapsible=T,
+                        box(width = 3, status = "primary", solidHeader = F, title="Additional choices [optional]", collapsible=T,
                             p("Leave silicate and phosphate uncertainties at zero if unknown"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("Pte", min=0, value="0", label="Phosphate uncertainty (µmol/kg)")),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("Site", min=0, value="0", label="Silicate uncertainty (µmol/kg)"))),
                             div(class='row',
                                 div(style="float: left; display:inline-block; margin-left: 15px; width: 90%",
@@ -337,13 +389,13 @@ ui <- dashboardPage(
                             p("The following inputs are only applied if 'Method of Moments' or 'Monte Carlo' are selected.
                               Correlation coefficient is the R-squared between the pair of chosen CS parameters, and repetitions is the number of Monte Carlo simulations"),
                             div(class='row',
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("corr", step=0.1, min=-1, max=1, value="0.0", label="Correlation coefficient")),
-                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.5%",
+                                div(style="float: left; display:inline-block; margin-left: 15px; width: 43.2%",
                                     numericInput("reps", step=1000, min=1, value="10000", label="Monte Carlo repetitions"))),
                         )),
                     fluidRow(
-                        box(width = 12, solidHeader = TRUE, title="Standard uncertainties of carbonate system parameters [OUTPUT]", collapsible=T,
+                        box(width = 12, status = "primary", solidHeader = F, title="Propagated uncertainties of carbonate system parameters [OUTPUT]", collapsible=T,
                             div(style = 'overflow-x: auto', tableOutput('table3')),
                             hr(),
                             div(class='row',
@@ -361,7 +413,7 @@ ui <- dashboardPage(
                     br(),
                     br(),
                     p("ScarFace", align = "center", style="color: #7da2d1; font-size: 48px"),
-                    p(em("version 1.1.0"), align="center"),
+                    p(em("version 1.2.0"), align="center"),
                     p("When you use 'ScarFace' for your published research, please cite the following two references:", align="center"),
                       br(),
                       p("Raitzsch, M. and Gattuso, J.-P., 2020. ScarFace - seacarb calculations with R Shiny user interface. https://doi.org/10.5281/zenodo.3662139.", align="center"),
@@ -543,14 +595,21 @@ server <- function(input, output, session) {
                         mutate(ALK = ifelse(row_number()==nrow(.), ALK*1000000, ALK))
                 }
             })
-
-    output$CollectedData <- renderTable({values$df}, align='c', digits=2)
     
-    delete <- observe({
-        if(input$delete > 0) {
-            values$df <- NULL
-            }
-        })
+    output$CollectedData <- renderDT({
+        req(input$collect)
+        datatable(values$df,
+                  options = list(pageLength = 10, autoWidth = TRUE, bFilter=0), rownames= FALSE) %>%
+            formatRound(c(3:20), 2) %>% 
+            formatStyle(columns = c(1:20), 'text-align' = 'center')
+    })
+    
+    # Delete selected rows
+    observeEvent(input$delete,{
+        if (!is.null(input$CollectedData_rows_selected)) {
+            values$df <- values$df[-as.numeric(input$CollectedData_rows_selected),]
+        }
+    })
     
     # Save data as csv #
     observe({
@@ -596,7 +655,7 @@ server <- function(input, output, session) {
         dnames <- names(tbl1())
         inc_options <- list()
         inc_options[dnames] <- dnames
-        updateCheckboxGroupInput(session, "incol",
+        updatePickerInput(session, "incol",
                                  label = "Select original columns to be included in output table",
                                  choices = inc_options,
                                  selected = "")
@@ -681,6 +740,7 @@ server <- function(input, output, session) {
     
     
     output$table2 <- renderTable({
+        req(input$batch)
         tbl_final()
         }, align='c', digits=2)
     
@@ -800,6 +860,7 @@ server <- function(input, output, session) {
     
     # Render output table #
     output$table3 <- renderTable({
+        req(input$batch)
         tbl5()
         }, align='c', digits=2)
     
