@@ -26,8 +26,10 @@ In both cases, '~/app.R' must be completed with the full path to the location of
 
 ## Bjerrum plot
 The Bjerrum plot displays the relative concentrations of carbonate species, with respect to DIC, as a function of pH, when the solution is at equilibrium. The black lines represent the speciation at T=25 °C, S=35, and P=0 bar (at sea surface). By using the sliders or manual inputs, the effects of temperature, salinity and pressure on the dissociation constants *p*K1 and *p*K2 of carbonic acid can be visualized. In the rightmost box the dissociation constants are displayed as numeric values.
+
 ## Working Directory
 The working directory, i.e. the path to where the input files are stored and where output files should be saved, can be defined here by pushing 'Choose' and selecting the destination folder from the dialog window.
+
 ## Carbonate chemistry
 ### manual input
 First the input parameters must be entered in the upper left box by choosing the **pair of known carbonate system parameters**, and defining the values of those, which are in µmol/kg (except for pH and pCO2). In addition, define **temperature**, **salinity** and **pressure**. In the upper right box, additional choices can be made, including: <br>
@@ -38,7 +40,7 @@ First the input parameters must be entered in the upper left box by choosing the
 * **Total Boron concentration:** default is Lee et al. (2010).
 * **pH scale:** in addition to 'total scale', 'seawater scale' and 'free scale' from the original 'seacarb' package, 'NBS scale' can be chosen as well. Default is 'total scale'.
 
-Once the desired choices were selected, the output values in the following table can be collected in an extra table. This facilitates the comparison of computed values from different input variables. The content of 'Collected output data' can be emptied or saved to the destination path as a csv file.
+Once the desired choices were selected, the output values in the following table can be collected in an extra table. This facilitates the comparison of computed values from different input variables. There you can delete single or multiple rows by mouse selection and pressing 'Delete selected rows'. The content of 'Collected output data' can be saved to the destination path as a csv file.
 
 ### batch input
 The input data can also be read from an uploaded csv file (here you may choose between comma-, semicolon- or tab-separation). An example is given with 'Batch_example_comma.csv'. In the box 'Carbonate system parameters [INPUT]', define the pair of known carbonate system variables. Then define the input parameters by choosing the corresponding columns of the source table from the dropdown menu. For the pressure, use the radio buttons to select whether pressure or water depth is given in the source data. <br><br>
