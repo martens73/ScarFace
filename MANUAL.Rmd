@@ -1,4 +1,9 @@
-# 'ScarFace' Manual
+---
+title: "'ScarFace' (v1.2.0) Manual"
+author: "Markus Raitzsch and Jean-Pierre Gattuso"
+date: "October 2020"
+output: html_document
+---
 
 ## Prerequisites
 ScarFace requires a base R installation (recommended with an installation of RStudio) and installed packages of 'shiny', 'shinydashboard', 'shinyFiles', 'seacarb', 'readr', and 'dplyr'. You may install them all at once with
