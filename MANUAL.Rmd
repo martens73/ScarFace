@@ -1,5 +1,5 @@
 ---
-title: "'ScarFace' (v1.2.0) Manual"
+title: "'ScarFace' (v1.3.0) Manual"
 author: "Markus Raitzsch and Jean-Pierre Gattuso"
 date: "October 2020"
 output: html_document
@@ -30,7 +30,7 @@ R -e "shiny::runApp('~/app.R')"
 In both cases, '~/app.R' must be completed with the full path to the location of 'app.R'.
 
 ## Bjerrum plot
-The Bjerrum plot displays the relative concentrations of carbonate species, with respect to DIC, as a function of pH, when the solution is at equilibrium. The black lines represent the speciation at T=25 °C, S=35, and P=0 bar (at sea surface). By using the sliders or manual inputs, the effects of temperature, salinity and pressure on the dissociation constants *p*K1 and *p*K2 of carbonic acid can be visualized. In the rightmost box the dissociation constants are displayed as numeric values.
+The Bjerrum plot displays the relative concentrations of carbonate species, with respect to DIC, as a function of pH, when the solution is at equilibrium. The grey lines represent the speciation at T=25 °C, S=35, and P=0 bar (at sea surface). By using the sliders or manual inputs, the effects of temperature, salinity and pressure on the dissociation constants *p*K1 and *p*K2 of carbonic acid can be visualized. The graph is interactive, i.e. it can be zoomed in or data can be read on mouse over.
 
 ## Working Directory
 The working directory, i.e. the path to where the input files are stored and where output files should be saved, can be defined here by pushing 'Choose' and selecting the destination folder from the dialog window.
@@ -48,7 +48,7 @@ First the input parameters must be entered in the upper left box by choosing the
 Once the desired choices were selected, the output values in the following table can be collected in an extra table. This facilitates the comparison of computed values from different input variables. There you can delete single or multiple rows by mouse selection and pressing 'Delete selected rows'. The content of 'Collected output data' can be saved to the destination path as a csv file.
 
 ### batch input
-The input data can also be read from an uploaded csv file (here you may choose between comma-, semicolon- or tab-separation). An example is given with 'Batch_example_comma.csv'. In the box 'Carbonate system parameters [INPUT]', define the pair of known carbonate system variables. Then define the input parameters by choosing the corresponding columns of the source table from the dropdown menu. For the pressure, use the radio buttons to select whether pressure or water depth is given in the source data. <br><br>
+The input data can also be read from an uploaded csv file (here you may choose between comma-, semicolon- or tab-separation). An example is given with 'Batch_example_comma.csv'. In the box 'Carbonate system parameters [INPUT]', define the pair of known carbonate system variables. Then define the input parameters by choosing the corresponding columns of the source table from the dropdown menu or by entering generic values. For the pressure, use the radio buttons to select whether pressure or water depth is given in the source data. <br><br>
 The usage of 'Additional choices' is equivalent to the 'manual input' (see above). <br><br>
 The calculated variables are shown in the table 'Carbonate system parameters [OUTPUT]'. Before continuing, it might be helpful to include additional columns from the source table (e.g. sample name, age, etc.). This can be done by using the checkboxes in the box 'Include additional columns [optional]'. <br><br>
 Once all information is included in the output table, it can be saved to the destination path as a csv file, or proceed with 'Error propagation'.
